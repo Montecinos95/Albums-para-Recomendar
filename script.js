@@ -8,7 +8,7 @@ class Disco {
 
 let discosArray = [];
 
-// Load items from localStorage if available
+// Carga los albums ya agregados del local storage
 const storedItems = localStorage.getItem("discosArray");
 if (storedItems) {
     discosArray = JSON.parse(storedItems);
@@ -24,7 +24,7 @@ document.getElementById('dataForm').addEventListener('submit', function (event) 
 
     discosArray.push(new Disco(art, alb, an));
 
-    // Save updated array to localStorage
+    // actualiza el array en localStorage
     localStorage.setItem("discosArray", JSON.stringify(discosArray));
 
     console.log(discosArray);
@@ -34,7 +34,7 @@ document.getElementById('dataForm').addEventListener('submit', function (event) 
     document.getElementById('Anio').value = '';
 
 
-    updateArrayDisplay(); // Update and display the array
+    updateArrayDisplay(); // actualiza y muestra el array
 });
 
 const arrayDisplayElement = document.getElementById("arrayDisplay");
@@ -42,40 +42,41 @@ const ul = document.createElement("ul");
 arrayDisplayElement.appendChild(ul);
 
 function updateArrayDisplay() {
-    ul.innerHTML = ''; // Clear the existing list
+    ul.innerHTML = ''; // Limpia la lista
 
-    // Loop through the array and create list items
+    // Va por el array agregando los list items necesarios
     discosArray.forEach((disco, index) => {
         const li = document.createElement("li");
         li.textContent = `Artista: ${disco.artista}, Album: ${disco.album}, Año: ${disco.anio}`;
     
-        const botonBuscar = document.createElement("button");
-        botonBuscar.textContent = "Buscar Youtube";
+        // crea el boton que agarra la info del array para luego buscalo en youtube
+        const botonBuscar = document.createElement("button"); // crea el botton Buscar
+        botonBuscar.textContent = "Buscar Youtube"; // Texto del boton
         botonBuscar.addEventListener("click", () => {
             let encodedQuery = encodeURIComponent(disco.artista + ' ' + disco.album + ' ' + disco.anio);
             var newPageUrl = "https://www.youtube.com/results?search_query=" + encodedQuery;
     
-            // Open the new page in a new tab/window
+            // Abre en una nueva pagina del navegador
             window.open(newPageUrl, "_blank");
         });
     
-        const deleteButton = document.createElement("button"); // Create delete button
-        deleteButton.textContent = "Delete"; // Button text
+        const deleteButton = document.createElement("button"); // crea el botton eliminar
+        deleteButton.textContent = "Delete"; // Texto del boton
         deleteButton.addEventListener("click", () => {
-            // Remove the disco from the array
+            // Elimina el disco del arreglo
             discosArray.splice(index, 1);
-            // Save updated array to localStorage
+            // Guarda el arreglo actualizado al local storage
             localStorage.setItem("discosArray", JSON.stringify(discosArray));
-            // Update the display
+            // actualiza el div
             updateArrayDisplay();
         });
     
-        li.appendChild(botonBuscar);
-        li.appendChild(deleteButton); // Append delete button
+        li.appendChild(botonBuscar);  // Hijo del UL  
+        li.appendChild(deleteButton); // Hijo del UL
     
         ul.appendChild(li);
     });
 }
 
-// Initial display
+// Muestra el array
 updateArrayDisplay();
